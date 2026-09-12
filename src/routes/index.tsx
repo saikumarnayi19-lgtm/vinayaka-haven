@@ -1,24 +1,79 @@
 import { createFileRoute } from "@tanstack/react-router";
+import "@/site.css";
+import { SiteNav } from "@/components/site/nav";
+import { Hero, QuickFacts } from "@/components/site/hero";
+import { About, Facilities, Food, Rooms, Safety, WhyUs } from "@/components/site/sections";
+import { Gallery, Testimonials } from "@/components/site/gallery";
+import {
+  Enquiry,
+  FinalCallToAction,
+  Location,
+  MobileActionBar,
+  SiteFooter,
+} from "@/components/site/contact";
+import { useReveal } from "@/hooks/use-reveal";
+import { HOSTEL } from "@/lib/site-data";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Sri Vinayaka Boys Hostel | ECIL Hyderabad" },
+      {
+        name: "description",
+        content:
+          "Comfortable boys hostel in ECIL, Hyderabad with homely food, free Wi-Fi, mineral water, CCTV and lockers.",
+      },
+      { property: "og:title", content: "Sri Vinayaka Boys Hostel | ECIL Hyderabad" },
+      {
+        property: "og:description",
+        content: "A clean, secure and homely stay for students and working professionals in ECIL.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  useReveal();
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Hostel",
+    name: HOSTEL.name,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "South Kamala Nagar, ECIL, Moula Ali",
+      addressLocality: "Hyderabad",
+      addressRegion: "Telangana",
+      postalCode: "500062",
+      addressCountry: "IN",
+    },
+    telephone: "+91 96182 29417",
+  };
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <SiteNav />
+      <main>
+        <Hero />
+        <QuickFacts />
+        <About />
+        <Facilities />
+        <Rooms />
+        <Food />
+        <Safety />
+        <WhyUs />
+        <Gallery />
+        <Testimonials />
+        <Location />
+        <Enquiry />
+        <FinalCallToAction />
+      </main>
+      <SiteFooter />
+      <MobileActionBar />
+    </>
   );
 }
